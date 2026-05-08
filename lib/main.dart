@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sakola/loginpage/login.dart';
 import 'package:sakola/loginpage/lupakatasandi.dart';
-import 'package:sakola/main%20page/absensi.dart';
-import 'package:sakola/main%20page/home%20page/cctv.dart';
-import 'package:sakola/main%20page/home.dart';
-import 'package:sakola/main%20page/lainnya.dart';
-import 'package:sakola/main%20page/tagihan%20page/metodepembayaran.dart';
-import 'package:sakola/main%20page/tagihan.dart';
+import 'package:sakola/main%20page%20orangtua/absensi.dart';
+import 'package:sakola/main%20page%20orangtua/home%20page/cctv.dart';
+import 'package:sakola/main%20page%20orangtua/home%20page/jadwal.dart';
+import 'package:sakola/main%20page%20orangtua/home%20page/notifikasi.dart';
+import 'package:sakola/main%20page%20orangtua/home%20page/recapnilai.dart';
+import 'package:sakola/main%20page%20orangtua/home%20page/tugas.dart';
+import 'package:sakola/main%20page%20orangtua/home.dart';
+import 'package:sakola/main%20page%20orangtua/lainnya%20page/keamanan.dart';
+import 'package:sakola/main%20page%20orangtua/lainnya%20page/pengaturan.dart';
+import 'package:sakola/main%20page%20orangtua/lainnya.dart';
+import 'package:sakola/main%20page%20orangtua/lainnya%20page/akunsaya.dart';
+import 'package:sakola/main%20page%20orangtua/tagihan%20page/metodepembayaran.dart';
+import 'package:sakola/main%20page%20orangtua/tagihan.dart';
 import 'package:sakola/navigationpage/navigation.dart';
 import 'package:sakola/start.dart';
 
@@ -44,8 +51,17 @@ class MyApp extends StatelessWidget {
         '/metode-pembayaran': (context) => const PaymentMethod(),
 
         //homepage
-        '/cctv': (context) => const Cctv(), // Ganti dengan halaman CCTV,
-      }, // Ganti dengan halaman Tagihan},
+        '/cctv': (context) => const Cctv(),
+        '/rekap-nilai': (context) => const RekapNilai(),
+        '/jadwal': (context) => const JadwalPelajaran(),
+        '/tugas': (context) => const Tugas(),
+        '/notifikasi': (context) => const Notifikasi(),
+
+        //pengaturan
+        '/akun-saya': (context) => const AkunSaya(),
+        '/keamanan': (context) => const Keamanan(),
+        '/pengaturan': (context) => const Pengaturan(),
+      },
     );
   }
 }

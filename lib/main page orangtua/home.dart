@@ -120,16 +120,20 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               // Tombol Notifikasi
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.notifications_none,
-                  color: Colors.white,
-                  size: 24,
+              InkWell(
+                onTap: () => Navigator.pushNamed(context, '/notifikasi'),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.notifications_none,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
               ),
             ],
@@ -264,7 +268,7 @@ class _HomePageState extends State<HomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _menuItem(Icons.analytics_outlined, 'Rekap Nilai', '/rekap'),
+          _menuItem(Icons.analytics_outlined, 'Rekap Nilai', '/rekap-nilai'),
           _menuItem(Icons.calendar_month_outlined, 'Jadwal', '/jadwal'),
           _menuItem(Icons.assignment_outlined, 'Tugas', '/tugas'),
           _menuItem(Icons.videocam_outlined, 'CCTV', '/cctv'),

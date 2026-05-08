@@ -51,7 +51,7 @@ class MenuLainnya extends StatelessWidget {
               title: 'Akun saya',
               icon: Icons.person_outline,
               onTap: () {
-                // Navigator.pushNamed(context, '/akun_saya');
+                Navigator.pushNamed(context, '/akun-saya');
               },
             ),
             _buildDivider(),
@@ -60,7 +60,7 @@ class MenuLainnya extends StatelessWidget {
               title: 'Pengaturan',
               icon: Icons.settings_outlined,
               onTap: () {
-                // Navigator.pushNamed(context, '/pengaturan');
+                Navigator.pushNamed(context, '/pengaturan');
               },
             ),
             _buildDivider(),
@@ -69,7 +69,7 @@ class MenuLainnya extends StatelessWidget {
               title: 'Keamanan',
               icon: Icons.lock_outline,
               onTap: () {
-                // Navigator.pushNamed(context, '/keamanan');
+                Navigator.pushNamed(context, '/keamanan');
               },
             ),
 
