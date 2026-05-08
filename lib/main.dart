@@ -15,7 +15,7 @@ import 'package:sakola/main%20page%20orangtua/lainnya%20page/akunsaya.dart';
 import 'package:sakola/main%20page%20orangtua/tagihan%20page/metodepembayaran.dart';
 import 'package:sakola/main%20page%20orangtua/tagihan.dart';
 import 'package:sakola/navigationpage/navigation.dart';
-import 'package:sakola/start.dart';
+import 'package:sakola/start%20page/start.dart';
 
 void main() {
   runApp(const MyApp());
