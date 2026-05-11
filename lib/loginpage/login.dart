@@ -10,6 +10,77 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
 
+  // Controller & State
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // Fungsi Login Simple (Bypass Tanpa Firebase)
+  Future<void> _loginProses() async {
+    // Validasi kosong
+    if (_emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      _showError('Email dan kata sandi tidak boleh kosong.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Simulasi loading 1.5 detik biar terasa seperti login sungguhan
+    await Future.delayed(const Duration(milliseconds: 1500));
+
+    String email = _emailController.text.trim().toLowerCase();
+
+    if (!mounted) return;
+
+    // --- LOGIKA BYPASS ---
+    // Ketik 'ortu' atau 'orangtua@sakola.com' untuk masuk sebagai Orang Tua
+    if (email == 'ortu' || email == 'orangtua@sakola.com') {
+      Navigator.pushReplacementNamed(
+        context,
+        '/navigation',
+        arguments: {'role': 'orang_tua'},
+      );
+    }
+    // Ketik 'admin' atau 'manajemen@sakola.com' untuk masuk sebagai Manajemen
+    else if (email == 'admin' || email == 'manajemen@sakola.com') {
+      Navigator.pushReplacementNamed(
+        context,
+        '/navigation',
+        arguments: {'role': 'manajemen'},
+      );
+    }
+    // Jika selain itu, tampilkan pesan error
+    else {
+      _showError('Email salah! Ketik "ortu" atau "admin" saja untuk tes.');
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(fontFamily: 'Alexandria'),
+        ),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,14 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: ConstrainedBox(
-                // Memaksa tinggi konten minimal setinggi layar
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: IntrinsicHeight(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Column(
                       children: [
-                        // --- KONTEN ATAS ---
                         const SizedBox(height: 50),
                         Center(
                           child: SizedBox(
@@ -38,9 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 28),
-
                         const Text(
                           'Selamat Datang 👋',
                           textAlign: TextAlign.center,
@@ -52,9 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Color(0xFF31313E),
                           ),
                         ),
-
                         const SizedBox(height: 8),
-
                         const Text(
                           'Isi email dan kata sandi untuk masuk ke aplikasi Sakola.',
                           textAlign: TextAlign.center,
@@ -66,35 +131,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.grey,
                           ),
                         ),
-
                         const SizedBox(height: 40),
 
-                        // Form Email & Password
                         _buildTextField(
                           label: 'Email',
-                          hint: 'ex: budi@sakola.com',
+                          hint: 'ex: ortu / admin',
                           icon: Icons.email_outlined,
+                          controller: _emailController,
                         ),
-
                         const SizedBox(height: 20),
-
                         _buildTextField(
                           label: 'Kata sandi',
-                          hint: 'Masukkan kata sandi',
+                          hint: 'Ketik apa saja bebas',
                           icon: Icons.lock_outline,
                           isPassword: true,
+                          controller: _passwordController,
                         ),
-
                         const SizedBox(height: 32),
 
-                        // Tombol Masuk
                         SizedBox(
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/navigation');
-                            },
+                            onPressed: _isLoading ? null : _loginProses,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF31313E),
                               shape: RoundedRectangleBorder(
@@ -102,20 +161,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child: const Text(
-                              'Masuk',
-                              style: TextStyle(
-                                fontFamily: 'Alexandria',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text(
+                                    'Masuk',
+                                    style: TextStyle(
+                                      fontFamily: 'Alexandria',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
-
                         const SizedBox(height: 16),
-
                         TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, '/forgot-password');
@@ -129,13 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-
-                        // --- SPACER ---
-                        // Spacer ini akan mengambil semua sisa ruang kosong
-                        // sehingga footer terdorong ke paling bawah.
                         const Spacer(),
-
-                        // --- FOOTER BAWAH ---
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 24.0),
                           child: Text(
@@ -159,12 +219,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Widget Helper untuk Textfield agar kode lebih bersih
   Widget _buildTextField({
     required String label,
     required String hint,
     required IconData icon,
     bool isPassword = false,
+    TextEditingController? controller,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,6 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 8),
         TextFormField(
+          controller: controller,
           obscureText: isPassword ? _obscureText : false,
           decoration: InputDecoration(
             hintText: hint,

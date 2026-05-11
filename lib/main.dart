@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:sakola/loginpage/login.dart';
 import 'package:sakola/loginpage/lupakatasandi.dart';
+import 'package:sakola/main%20page%20manajeman/homepage.dart';
+import 'package:sakola/main%20page%20manajeman/laporan.dart';
+import 'package:sakola/main%20page%20manajeman/persetujuan.dart';
 import 'package:sakola/main%20page%20orangtua/absensi.dart';
 import 'package:sakola/main%20page%20orangtua/home%20page/cctv.dart';
 import 'package:sakola/main%20page%20orangtua/home%20page/jadwal.dart';
@@ -17,8 +21,9 @@ import 'package:sakola/main%20page%20orangtua/tagihan.dart';
 import 'package:sakola/navigationpage/navigation.dart';
 import 'package:sakola/start%20page/start.dart';
 
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -42,7 +47,12 @@ class MyApp extends StatelessWidget {
         //start
         '/start': (context) => const OnboardingScreen(),
 
-        //main page
+        //main page manajemen
+        '/home_manajemen': (context) => const HomeManajemen(),
+        '/persetujuan_manajemen': (context) => const Persetujuan(),
+        '/laporan_manajemen': (context) => const Laporan(),
+
+        //main page orangtua
         '/home': (context) => const HomePage(),
         '/tagihan': (context) => const Tagihan(),
         '/absensi': (context) => const Absensi(),
