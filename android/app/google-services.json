@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "493482247699",
+    "project_id": "sakola-240204",
+    "storage_bucket": "sakola-240204.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493482247699:android:14bde7c392a0e4d9f2e1e6",
+        "android_client_info": {
+          "package_name": "com.example.amarmuflihrabani"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW4Kbt7fbCphhphXKLtEi-bJyvn4GtQ40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493482247699:android:7885095690b7a73af2e1e6",
+        "android_client_info": {
+          "package_name": "com.example.sakola"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW4Kbt7fbCphhphXKLtEi-bJyvn4GtQ40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
