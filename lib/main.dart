@@ -8,7 +8,7 @@ import 'package:sakola/main%20page%20manajeman/persetujuan.dart';
 import 'package:sakola/main%20page%20orangtua/absensi.dart';
 import 'package:sakola/main%20page%20orangtua/home%20page/cctv.dart';
 import 'package:sakola/main%20page%20orangtua/home%20page/jadwal.dart';
-import 'package:sakola/main%20page%20orangtua/home%20page/notifikasi.dart';
+import 'package:sakola/notifikasi/notifikasi.dart';
 import 'package:sakola/main%20page%20orangtua/home%20page/recapnilai.dart';
 import 'package:sakola/main%20page%20orangtua/home%20page/tugas.dart';
 import 'package:sakola/main%20page%20orangtua/home.dart';

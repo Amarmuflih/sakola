@@ -1,5 +1,35 @@
 import 'package:flutter/material.dart';
 
+// ============================================================================
+// 1. MODEL DATA NOTIFIKASI
+// ============================================================================
+class NotifData {
+  final String id;
+  final String type;
+  final String title;
+  final String description;
+  final String time;
+  final String? initials; // Untuk icon inisial (misal tugas: 'MT')
+  final String? iconUrl; // Untuk icon berupa gambar
+  final Color? color; // Warna background icon inisial
+  bool isRead;
+
+  NotifData({
+    required this.id,
+    required this.type,
+    required this.title,
+    required this.description,
+    required this.time,
+    this.initials,
+    this.iconUrl,
+    this.color,
+    this.isRead = false,
+  });
+}
+
+// ============================================================================
+// 2. HALAMAN NOTIFIKASI UTAMA (GABUNGAN ROLE)
+// ============================================================================
 class Notifikasi extends StatefulWidget {
   const Notifikasi({Key? key}) : super(key: key);
 
@@ -8,45 +38,85 @@ class Notifikasi extends StatefulWidget {
 }
 
 class _NotifikasiState extends State<Notifikasi> {
-  // State untuk menyimpan notifikasi yang sedang dibuka detailnya
-  Map<String, dynamic>? _selectedNotif;
+  NotifData? _selectedNotif;
+  String _userRole = 'orang_tua'; // Default role
 
-  // Data Dummy Notifikasi (Perhatikan penambahan field 'isRead')
-  final List<Map<String, dynamic>> _notifications = [
-    {
-      'id': '1',
-      'type': 'pembayaran',
-      'title': 'Pembayaran SPP Bulan Oktober 2024 Berhasil',
-      'description': 'Pembayaran SPP sebesar Rp 345,000 berhasil diterima.',
-      'time': '5 min',
-      'isRead': false, // Belum dibaca
-      'iconUrl': 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-    },
-    {
-      'id': '2',
-      'type': 'tugas',
-      'title': 'Tugas Mengarang Cerita Pendek',
-      'description':
+  // --- DATA DUMMY: ORANG TUA ---
+  final List<NotifData> _listOrangTua = [
+    NotifData(
+      id: 'ot1',
+      type: 'pembayaran',
+      title: 'Pembayaran SPP Bulan Oktober 2024 Berhasil',
+      description: 'Pembayaran SPP sebesar Rp 345,000 berhasil diterima.',
+      time: '5 min',
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+      isRead: false,
+    ),
+    NotifData(
+      id: 'ot2',
+      type: 'tugas',
+      title: 'Tugas Mengarang Cerita Pendek',
+      description:
           'Ada tugas baru untuk dikerjakan, ayo segera cek agar segera dikerjakan.',
-      'time': '5 min',
-      'isRead': false, // Belum dibaca
-      'initials': 'TM',
-      'color': const Color(0xFF7F3FBF), // Ungu
-    },
-    {
-      'id': '3',
-      'type': 'event',
-      'title': 'Event Persami bulan Oktober 2024',
-      'description':
+      time: '1 jam',
+      initials: 'TM',
+      color: const Color(0xFF7F3FBF),
+      isRead: false,
+    ),
+    NotifData(
+      id: 'ot3',
+      type: 'event',
+      title: 'Event Persami bulan Oktober 2024',
+      description:
           'Pengumuman! Akan diadakan kegiatan Persami pada 21 Oktober 2024.',
-      'time': 'Kemarin',
-      'isRead': true, // Sudah dibaca
-      'iconUrl': 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-    },
+      time: 'Kemarin',
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+      isRead: true,
+    ),
+  ];
+
+  // --- DATA DUMMY: MANAJEMEN ---
+  final List<NotifData> _listManajemen = [
+    NotifData(
+      id: 'mj1',
+      type: 'persetujuan',
+      title: 'Pengajuan Dana Ekstrakurikuler',
+      description:
+          'Terdapat pengajuan anggaran baru yang menunggu persetujuan Anda.',
+      time: '2 min',
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/1682/1682308.png',
+      isRead: false,
+    ),
+    NotifData(
+      id: 'mj2',
+      type: 'laporan',
+      title: 'Laporan Keuangan Bulanan',
+      description:
+          'Laporan keuangan bulan September telah selesai dan siap di-review.',
+      time: 'Kemarin',
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3201/3201521.png',
+      isRead: true,
+    ),
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Menangkap role dari argumen rute navigasi
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null && args.containsKey('role')) {
+      _userRole = args['role'];
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Memilih daftar data berdasarkan role
+    final currentData = _userRole == 'manajemen'
+        ? _listManajemen
+        : _listOrangTua;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -56,12 +126,10 @@ class _NotifikasiState extends State<Notifikasi> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF31313E)),
           onPressed: () {
             if (_selectedNotif != null) {
-              // Jika sedang di halaman detail, kembali ke list
-              setState(() {
-                _selectedNotif = null;
-              });
+              // Jika sedang melihat detail, kembali ke list
+              setState(() => _selectedNotif = null);
             } else {
-              // Keluar dari halaman Notifikasi
+              // Keluar dari halaman
               Navigator.pop(context);
             }
           },
@@ -75,53 +143,52 @@ class _NotifikasiState extends State<Notifikasi> {
             fontSize: 18,
           ),
         ),
-        // Garis batas tipis di bawah AppBar
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(color: const Color(0xFFF3F4F6), height: 1.0),
         ),
       ),
-      body: _selectedNotif == null ? _buildListView() : _buildDetailView(),
+      body: _selectedNotif == null
+          ? _buildListView(currentData)
+          : _buildDetailView(_selectedNotif!),
     );
   }
 
-  // ===========================================================================
-  // 1. TAMPILAN LIST NOTIFIKASI
-  // ===========================================================================
-  Widget _buildListView() {
+  // --- WIDGET LIST VIEW ---
+  Widget _buildListView(List<NotifData> data) {
+    if (data.isEmpty) {
+      return const Center(
+        child: Text(
+          'Belum ada notifikasi.',
+          style: TextStyle(fontFamily: 'Alexandria', color: Colors.grey),
+        ),
+      );
+    }
+
     return ListView.separated(
-      itemCount: _notifications.length,
-      separatorBuilder: (context, index) => const Divider(
-        height: 1,
-        thickness: 1,
-        color: Color(0xFFF3F4F6), // Garis pembatas abu-abu terang
-      ),
+      itemCount: data.length,
+      separatorBuilder: (context, index) =>
+          const Divider(height: 1, thickness: 1, color: Color(0xFFF3F4F6)),
       itemBuilder: (context, index) {
-        final notif = _notifications[index];
-        final bool isRead = notif['isRead'];
+        final item = data[index];
 
         return InkWell(
           onTap: () {
             setState(() {
-              // Tandai sebagai sudah dibaca
-              notif['isRead'] = true;
-              // Buka halaman detail
-              _selectedNotif = notif;
+              item.isRead = true; // Tandai sudah dibaca
+              _selectedNotif = item; // Buka detail
             });
           },
           child: Container(
-            // Memberikan background biru/ungu sangat muda jika belum dibaca
-            color: isRead ? Colors.white : const Color(0xFFF8F9FE),
+            color: item.isRead
+                ? Colors.white
+                : const Color(0xFFF8F9FE), // Biru sangat pudar jika unread
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // --- IKON NOTIFIKASI ---
-                _buildNotificationIcon(notif),
-
+                _buildNotificationIcon(item),
                 const SizedBox(width: 16),
-
-                // --- TEKS NOTIFIKASI ---
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,12 +198,11 @@ class _NotifikasiState extends State<Notifikasi> {
                         children: [
                           Expanded(
                             child: Text(
-                              notif['title'],
+                              item.title,
                               style: TextStyle(
                                 fontFamily: 'Alexandria',
                                 color: const Color(0xFF31313E),
-                                // Teks lebih tebal jika belum dibaca
-                                fontWeight: isRead
+                                fontWeight: item.isRead
                                     ? FontWeight.w600
                                     : FontWeight.bold,
                                 fontSize: 14,
@@ -146,12 +212,12 @@ class _NotifikasiState extends State<Notifikasi> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            notif['time'],
+                            item.time,
                             style: TextStyle(
                               fontFamily: 'Alexandria',
                               color: Colors.grey.shade500,
                               fontSize: 12,
-                              fontWeight: isRead
+                              fontWeight: item.isRead
                                   ? FontWeight.normal
                                   : FontWeight.w600,
                             ),
@@ -160,7 +226,7 @@ class _NotifikasiState extends State<Notifikasi> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        notif['description'],
+                        item.description,
                         style: TextStyle(
                           fontFamily: 'Alexandria',
                           color: Colors.grey.shade600,
@@ -181,20 +247,19 @@ class _NotifikasiState extends State<Notifikasi> {
     );
   }
 
-  // Helper untuk menampilkan ikon notifikasi yang berbeda-beda jenisnya
-  Widget _buildNotificationIcon(Map<String, dynamic> notif) {
-    if (notif['type'] == 'tugas') {
-      // Tampilan Ikon Inisial Tugas (misal: "TM")
+  // --- WIDGET ICON BUILDER ---
+  Widget _buildNotificationIcon(NotifData item) {
+    if (item.type == 'tugas') {
       return Container(
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: notif['color'],
+          color: item.color,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
           child: Text(
-            notif['initials'],
+            item.initials ?? '',
             style: const TextStyle(
               fontFamily: 'Alexandria',
               color: Colors.white,
@@ -205,18 +270,17 @@ class _NotifikasiState extends State<Notifikasi> {
         ),
       );
     } else {
-      // Tampilan Ikon Gambar (SPP atau Event)
       return Container(
         width: 44,
         height: 44,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: const Color(0xFFFBF9FF), // Latar icon ungu sangat muda
+          color: const Color(0xFFFBF9FF),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: const Color(0xFFF3E8FF)),
         ),
         child: Image.network(
-          notif['iconUrl'],
+          item.iconUrl ?? '',
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) =>
               const Icon(Icons.notifications_active, color: Colors.grey),
@@ -225,10 +289,8 @@ class _NotifikasiState extends State<Notifikasi> {
     }
   }
 
-  // ===========================================================================
-  // 2. TAMPILAN DETAIL NOTIFIKASI
-  // ===========================================================================
-  Widget _buildDetailView() {
+  // --- WIDGET DETAIL VIEW ---
+  Widget _buildDetailView(NotifData item) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -236,11 +298,11 @@ class _NotifikasiState extends State<Notifikasi> {
         children: [
           Row(
             children: [
-              _buildNotificationIcon(_selectedNotif!),
+              _buildNotificationIcon(item),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  _selectedNotif!['title'],
+                  item.title,
                   style: const TextStyle(
                     fontFamily: 'Alexandria',
                     color: Color(0xFF31313E),
@@ -254,7 +316,7 @@ class _NotifikasiState extends State<Notifikasi> {
           ),
           const SizedBox(height: 12),
           Text(
-            _selectedNotif!['time'],
+            item.time,
             style: const TextStyle(
               fontFamily: 'Alexandria',
               color: Colors.grey,
@@ -265,7 +327,7 @@ class _NotifikasiState extends State<Notifikasi> {
           const Divider(color: Color(0xFFF3F4F6), thickness: 1),
           const SizedBox(height: 24),
           Text(
-            _selectedNotif!['description'],
+            item.description,
             style: const TextStyle(
               fontFamily: 'Alexandria',
               color: Color(0xFF4B5563),
@@ -275,15 +337,13 @@ class _NotifikasiState extends State<Notifikasi> {
           ),
           const SizedBox(height: 40),
 
-          // --- TOMBOL AKSI TAMBAHAN DI DETAIL (Opsional, menyesuaikan tipe) ---
-          if (_selectedNotif!['type'] == 'tugas')
+          // --- TOMBOL AKSI TAMBAHAN (Sesuai jenis) ---
+          if (item.type == 'tugas')
             SizedBox(
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: () {
-                  // Aksi menuju halaman Tugas
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF31313E),
                   shape: RoundedRectangleBorder(
@@ -301,14 +361,12 @@ class _NotifikasiState extends State<Notifikasi> {
                 ),
               ),
             )
-          else if (_selectedNotif!['type'] == 'pembayaran')
+          else if (item.type == 'pembayaran')
             SizedBox(
               width: double.infinity,
               height: 52,
               child: OutlinedButton(
-                onPressed: () {
-                  // Aksi menuju Riwayat Tagihan
-                },
+                onPressed: () {},
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFE5E7EB)),
                   shape: RoundedRectangleBorder(

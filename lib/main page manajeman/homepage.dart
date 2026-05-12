@@ -196,16 +196,22 @@ class _HomeManajemenState extends State<HomeManajemen> {
         ),
         Stack(
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: const Icon(
-                Icons.notifications_none_rounded,
-                color: Color(0xFF31313E),
+            InkWell(
+              onTap: () {
+                // --- FUNGSI TAP NOTIFIKASI ---
+                Navigator.pushNamed(context, '/notifikasi');
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: const Icon(
+                  Icons.notifications_none_rounded,
+                  color: Color(0xFF31313E),
+                ),
               ),
             ),
             Positioned(
